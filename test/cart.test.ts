@@ -33,6 +33,12 @@ describe("cart", () => {
 
   it("drops unknown slugs from the total", () => {
     assert.equal(cartTotal([{ slug: "missing", qty: 4 }]), 0);
+    assert.equal(cartCount([{ slug: "missing", qty: 4 }]), 0);
+  });
+
+  it("rejects non-finite quantities", () => {
+    const lines = addLine([], "cloud-nine-oil", Number.POSITIVE_INFINITY);
+    assert.deepEqual(lines, []);
   });
 
   it("builds a Shopify cart permalink", () => {

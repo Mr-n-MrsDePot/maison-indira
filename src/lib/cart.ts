@@ -7,7 +7,13 @@ export type CartLine = {
 
 export const CART_STORAGE_KEY = "maison-indira-cart";
 
+function normalizeQty(qty: number): number {
+  if (!Number.isFinite(qty)) return 0;
+  return Math.min(99, Math.max(0, Math.floor(qty)));
+}
+
 export function addLine(lines: CartLine[], slug: string, qty = 1): CartLine[] {
+  qty = normalizeQty(qty);
   if (qty <= 0) return lines;
   const existing = lines.find((line) => line.slug === slug);
   if (existing) {
@@ -19,6 +25,7 @@ export function addLine(lines: CartLine[], slug: string, qty = 1): CartLine[] {
 }
 
 export function setLineQty(lines: CartLine[], slug: string, qty: number): CartLine[] {
+  qty = normalizeQty(qty);
   if (qty <= 0) return lines.filter((line) => line.slug !== slug);
   if (lines.some((line) => line.slug === slug)) {
     return lines.map((line) => (line.slug === slug ? { ...line, qty } : line));
@@ -30,8 +37,8 @@ export function removeLine(lines: CartLine[], slug: string): CartLine[] {
   return lines.filter((line) => line.slug !== slug);
 }
 
-export function cartCount(lines: CartLine[]): number {
-  return lines.reduce((sum, line) => sum + line.qty, 0);
+export function cartCount(lines: CartLine[], catalog: Product[] = products): number {
+  return resolveLines(lines, catalog).reduce((sum, line) => sum + line.qty, 0);
 }
 
 export function resolveLines(
@@ -70,14 +77,13 @@ export function loadCart(): CartLine[] {
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(
-      (item): item is CartLine =>
-        typeof item === "object" &&
-        item !== null &&
-        typeof (item as CartLine).slug === "string" &&
-        typeof (item as CartLine).qty === "number" &&
-        (item as CartLine).qty > 0,
-    );
+    return parsed.flatMap((item) => {
+      if (typeof item !== "object" || item === null) return [];
+      const slug = (item as CartLine).slug;
+      const qty = normalizeQty(Number((item as CartLine).qty));
+      if (typeof slug !== "string" || slug.length === 0 || qty <= 0) return [];
+      return [{ slug, qty }];
+    });
   } catch {
     return [];
   }
@@ -85,5 +91,9 @@ export function loadCart(): CartLine[] {
 
 export function saveCart(lines: CartLine[]): void {
   if (typeof localStorage === "undefined") return;
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(lines));
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(lines));
+  } catch {
+    /* private mode / quota */
+  }
 }

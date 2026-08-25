@@ -4,7 +4,7 @@
   --cream: #ece2d4;
   --sand: #d4c2ac;
   --blush: #c9aa98;
-  --gold: #a57c4d;
+  --gold: #7c5428;
   --gold-soft: #c9b08a;
   --ink: #1b1613;
   --ink-soft: #3a322c;
@@ -76,11 +76,11 @@ h3,
 
 .eyebrow {
   font-family: var(--sans);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ink-soft);
 }
 
 .wrap {
@@ -738,6 +738,27 @@ h3,
   .site-header {
     display: flex;
     justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+  }
+
+  .wordmark {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+  }
+
+  .icon-btn,
+  .menu-toggle {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 0.68rem;
+    flex-shrink: 0;
   }
 
   .nav {
@@ -759,12 +780,6 @@ h3,
     flex-direction: column;
     padding: 18px 28px 22px;
     gap: 14px;
-  }
-
-  .wordmark {
-    text-align: left;
-    font-size: 1.35rem;
-    letter-spacing: 0.12em;
   }
 
   .hero-copy,
@@ -789,10 +804,16 @@ h3,
   }
 
   .cart-line {
-    grid-template-columns: 72px 1fr;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 
-  .cart-line .qty {
-    grid-column: 2;
+  .marquee-track {
+    animation: none;
   }
 }

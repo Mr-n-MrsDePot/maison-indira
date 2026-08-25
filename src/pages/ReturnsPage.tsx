@@ -23,8 +23,9 @@ export function ReturnsPage() {
       </p>
       <h2>What we cannot take back</h2>
       <p>
-        Personal-care goods once used, sale items, gift cards, custom orders, and hazardous or
-        flammable goods are not returnable. If you are unsure, ask before sending anything.
+        Used fragrance, gift cards, custom orders, and hazardous or flammable goods are not
+        returnable. If you are unsure, ask before sending anything. The current collection is on
+        a house sale; unused pieces in original condition still qualify within the window.
       </p>
       <h2>Refunds</h2>
       <p>

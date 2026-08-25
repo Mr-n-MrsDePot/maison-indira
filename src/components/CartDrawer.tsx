@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../CartContext.tsx";
 import { formatMoney } from "../data/products.ts";
@@ -6,13 +7,23 @@ import { resolveLines } from "../lib/cart.ts";
 
 export function CartDrawer() {
   const { open, setOpen, lines, total, setQty, checkout } = useCart();
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, setOpen]);
+
   if (!open) return null;
   const resolved = resolveLines(lines);
 
   return (
     <>
       <div className="drawer-backdrop" onClick={() => setOpen(false)} />
-      <aside className="drawer" aria-label="Shopping bag">
+      <aside className="drawer" role="dialog" aria-modal="true" aria-label="Shopping bag">
         <header>
           <h2>Your bag</h2>
           <button className="icon-btn" type="button" onClick={() => setOpen(false)}>
