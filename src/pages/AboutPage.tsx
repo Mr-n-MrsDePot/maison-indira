@@ -30,9 +30,8 @@ export function AboutPage() {
           <h2>Not just fragrance. An experience.</h2>
           <p>
             The Shopify storefront was a beginning. This house is the brand as it should be met:
-            photography of the actual objects, a collection you can read, and a bag that still
-            checks out through the same store so orders, payments, and shipping stay where they
-            already work.
+            photography of the actual objects, a collection you can read, and a bag that pays
+            through Stripe so the money comes to Maison Indira.
           </p>
           <p>
             Every piece is handcrafted with care — oil in a 1 oz glass dropper with rose-gold

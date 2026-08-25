@@ -6,7 +6,7 @@ import { asset } from "../lib/asset.ts";
 import { resolveLines } from "../lib/cart.ts";
 
 export function CartDrawer() {
-  const { open, setOpen, lines, total, setQty, checkout } = useCart();
+  const { open, setOpen, lines, total, setQty, checkout, checkoutBusy, checkoutError } = useCart();
 
   useEffect(() => {
     if (!open) return;
@@ -60,8 +60,14 @@ export function CartDrawer() {
             <span>Total</span>
             <strong>{formatMoney(total)}</strong>
           </div>
-          <button className="btn" type="button" disabled={resolved.length === 0} onClick={checkout}>
-            Checkout
+          {checkoutError ? <p className="checkout-error">{checkoutError}</p> : null}
+          <button
+            className="btn"
+            type="button"
+            disabled={resolved.length === 0 || checkoutBusy}
+            onClick={() => void checkout()}
+          >
+            {checkoutBusy ? "Opening Stripe…" : "Checkout"}
           </button>
           <Link className="btn ghost" to="/cart" onClick={() => setOpen(false)}>
             Review bag

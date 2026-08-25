@@ -15,8 +15,6 @@ export type Product = {
   category: string;
 };
 
-export const SHOPIFY_STORE = "https://maisonindira.myshopify.com";
-
 export const brand = {
   name: "Maison Indira",
   tagline: "Not just fragrance. An experience.",
@@ -130,16 +128,4 @@ export function formatMoney(amount: number): string {
     currency: "USD",
     minimumFractionDigits: 2,
   }).format(amount);
-}
-
-export function checkoutUrl(
-  lines: { variantId: string; qty: number }[],
-  store = SHOPIFY_STORE,
-): string {
-  const path = lines
-    .filter((line) => line.qty > 0)
-    .map((line) => `${line.variantId}:${line.qty}`)
-    .join(",");
-  if (!path) return `${store}/cart`;
-  return `${store}/cart/${path}`;
 }

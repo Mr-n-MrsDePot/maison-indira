@@ -1,14 +1,16 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { checkoutUrl, formatMoney } from "../src/data/products.ts";
+import { formatMoney } from "../src/data/products.ts";
+import { shippingRates } from "../src/data/shipping.ts";
 import {
   addLine,
   cartCount,
   cartTotal,
   removeLine,
   setLineQty,
-  shopifyCheckout,
 } from "../src/lib/cart.ts";
+import { stripeLines } from "../src/lib/checkout.ts";
+import { parseCartBody } from "../server/stripe.ts";
 
 describe("cart", () => {
   it("adds a new line and increments an existing one", () => {
@@ -41,17 +43,6 @@ describe("cart", () => {
     assert.deepEqual(lines, []);
   });
 
-  it("builds a Shopify cart permalink", () => {
-    const url = shopifyCheckout([
-      { slug: "cloud-nine-oil", qty: 2 },
-      { slug: "cloud-nine-diffuser", qty: 1 },
-    ]);
-    assert.equal(
-      url,
-      "https://maisonindira.myshopify.com/cart/49432918884594:2,49473794703602:1",
-    );
-  });
-
   it("removes a line by slug", () => {
     const lines = removeLine(
       [
@@ -64,13 +55,35 @@ describe("cart", () => {
   });
 });
 
+describe("stripe checkout payload", () => {
+  it("prices from the catalog, not the client", () => {
+    const items = stripeLines([
+      { slug: "cloud-nine-oil", qty: 2 },
+      { slug: "cloud-nine-diffuser", qty: 1 },
+    ]);
+    assert.deepEqual(items, [
+      { name: "Cloud Nine Home Fragrance Oil", unitAmountCents: 1500, quantity: 2 },
+      { name: "Cloud Nine Modern Reed Diffuser", unitAmountCents: 4000, quantity: 1 },
+    ]);
+  });
+
+  it("ignores unknown slugs and empty carts", () => {
+    assert.deepEqual(stripeLines([{ slug: "nope", qty: 3 }]), []);
+    assert.deepEqual(parseCartBody({ lines: [{ slug: "cloud-nine-oil", qty: 1.9 }] }), [
+      { slug: "cloud-nine-oil", qty: 1 },
+    ]);
+    assert.deepEqual(parseCartBody({ lines: "bad" }), []);
+  });
+
+  it("ships at the house rates", () => {
+    assert.equal(shippingRates[0]?.amountCents, 695);
+    assert.equal(shippingRates[1]?.amountCents, 1295);
+  });
+});
+
 describe("money", () => {
   it("formats USD", () => {
     assert.equal(formatMoney(15), "$15.00");
     assert.equal(formatMoney(40), "$40.00");
-  });
-
-  it("returns an empty Shopify cart when there are no lines", () => {
-    assert.equal(checkoutUrl([]), "https://maisonindira.myshopify.com/cart");
   });
 });

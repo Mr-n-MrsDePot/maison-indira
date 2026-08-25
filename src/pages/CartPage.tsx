@@ -5,7 +5,7 @@ import { asset } from "../lib/asset.ts";
 import { resolveLines } from "../lib/cart.ts";
 
 export function CartPage() {
-  const { lines, total, setQty, remove, checkout } = useCart();
+  const { lines, total, setQty, remove, checkout, checkoutBusy, checkoutError } = useCart();
   const resolved = resolveLines(lines);
 
   return (
@@ -53,11 +53,17 @@ export function CartPage() {
             <p className="eyebrow">Checkout</p>
             <h2 style={{ fontSize: "2rem" }}>{formatMoney(total)}</h2>
             <p>
-              Payment is processed through the Maison Indira Shopify checkout — same orders, same
-              account, same shipping.
+              Pay with card through Stripe — money goes to Maison Indira, not Shopify. Shipping is
+              chosen on the next screen.
             </p>
-            <button className="btn" type="button" onClick={checkout}>
-              Continue to checkout
+            {checkoutError ? <p className="checkout-error">{checkoutError}</p> : null}
+            <button
+              className="btn"
+              type="button"
+              disabled={checkoutBusy}
+              onClick={() => void checkout()}
+            >
+              {checkoutBusy ? "Opening Stripe…" : "Continue to checkout"}
             </button>
             <Link className="btn ghost" to="/shop">
               Keep shopping

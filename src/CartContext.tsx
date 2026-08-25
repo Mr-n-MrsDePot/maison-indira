@@ -15,7 +15,6 @@ import {
   removeLine,
   saveCart,
   setLineQty,
-  shopifyCheckout,
   type CartLine,
 } from "./lib/cart.ts";
 
@@ -26,7 +25,10 @@ type CartContextValue = {
   add: (slug: string, qty?: number) => void;
   setQty: (slug: string, qty: number) => void;
   remove: (slug: string) => void;
-  checkout: () => void;
+  clear: () => void;
+  checkout: () => Promise<void>;
+  checkoutBusy: boolean;
+  checkoutError: string | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 };
@@ -36,6 +38,8 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>(() => loadCart());
   const [open, setOpen] = useState(false);
+  const [checkoutBusy, setCheckoutBusy] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   useEffect(() => {
     saveCart(lines);
@@ -44,6 +48,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const add = useCallback((slug: string, qty = 1) => {
     setLines((current) => addLine(current, slug, qty));
     setOpen(true);
+    setCheckoutError(null);
   }, []);
 
   const setQty = useCallback((slug: string, qty: number) => {
@@ -54,9 +59,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setLines((current) => removeLine(current, slug));
   }, []);
 
-  const checkout = useCallback(() => {
-    const url = shopifyCheckout(lines);
-    window.location.assign(url);
+  const clear = useCallback(() => {
+    setLines([]);
+  }, []);
+
+  const checkout = useCallback(async () => {
+    setCheckoutBusy(true);
+    setCheckoutError(null);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lines }),
+      });
+      const data = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Checkout could not start.");
+      }
+      window.location.assign(data.url);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Checkout could not start.";
+      setCheckoutError(message);
+    } finally {
+      setCheckoutBusy(false);
+    }
   }, [lines]);
 
   const value = useMemo(
@@ -67,11 +93,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
       add,
       setQty,
       remove,
+      clear,
       checkout,
+      checkoutBusy,
+      checkoutError,
       open,
       setOpen,
     }),
-    [add, checkout, lines, open, remove, setQty],
+    [
+      add,
+      checkout,
+      checkoutBusy,
+      checkoutError,
+      clear,
+      lines,
+      open,
+      remove,
+      setQty,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -1,4 +1,4 @@
-import { checkoutUrl, products, type Product } from "../data/products.ts";
+import { products, type Product } from "../data/products.ts";
 
 export type CartLine = {
   slug: string;
@@ -56,18 +56,6 @@ export function cartTotal(lines: CartLine[], catalog: Product[] = products): num
     (sum, line) => sum + line.product.price * line.qty,
     0,
   );
-}
-
-export function shopifyCheckout(
-  lines: CartLine[],
-  catalog: Product[] = products,
-  store?: string,
-): string {
-  const resolved = resolveLines(lines, catalog).map((line) => ({
-    variantId: line.product.variantId,
-    qty: line.qty,
-  }));
-  return checkoutUrl(resolved, store);
 }
 
 export function loadCart(): CartLine[] {

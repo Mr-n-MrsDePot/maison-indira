@@ -7,6 +7,7 @@ import { HomePage } from "./pages/HomePage.tsx";
 import { NotFoundPage } from "./pages/NotFoundPage.tsx";
 import { ProductPage } from "./pages/ProductPage.tsx";
 import { ReturnsPage } from "./pages/ReturnsPage.tsx";
+import { OrderSuccessPage } from "./pages/OrderSuccessPage.tsx";
 import { ShopPage } from "./pages/ShopPage.tsx";
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="cart" element={<CartPage />} />
+        <Route path="order-success" element={<OrderSuccessPage />} />
         <Route path="returns" element={<ReturnsPage />} />
         <Route path="collections/all" element={<Navigate to="/shop" replace />} />
         <Route path="*" element={<NotFoundPage />} />
