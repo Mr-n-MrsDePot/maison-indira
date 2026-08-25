@@ -18,7 +18,9 @@ Open [http://localhost:5222](http://localhost:5222).
 
 ## Send this link
 
-Live site (public): [https://mr-n-mrsdepot.github.io/maison-indira/](https://mr-n-mrsdepot.github.io/maison-indira/)
+Live site (public, no login): [https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html](https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html)
+
+GitHub repo: [https://github.com/Mr-n-MrsDePot/maison-indira](https://github.com/Mr-n-MrsDePot/maison-indira)
 
 Checkout still goes to the existing Shopify store. No login required to view.
 

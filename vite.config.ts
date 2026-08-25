@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GITHUB_PAGES === "1" ? "/maison-indira/" : "/",
+  base: process.env.GITHUB_PAGES === "1" ? "./" : "/",
   server: { port: 5222, strictPort: true },
   preview: { port: 5222, strictPort: true },
 });
