@@ -16,3 +16,5 @@ pages-source.json
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
