@@ -67,7 +67,7 @@ export function CartDrawer() {
             disabled={resolved.length === 0 || checkoutBusy}
             onClick={() => void checkout()}
           >
-            {checkoutBusy ? "Opening Stripe…" : "Checkout"}
+            {checkoutBusy ? "Opening checkout…" : "Checkout"}
           </button>
           <Link className="btn ghost" to="/cart" onClick={() => setOpen(false)}>
             Review bag

@@ -28,3 +28,7 @@ export function loadLocalEnv(): void {
 export function stripeSecret(): string {
   return process.env.STRIPE_SECRET_KEY?.trim() ?? "";
 }
+
+export function stripePublishable(): string {
+  return process.env.STRIPE_PUBLISHABLE_KEY?.trim() ?? "";
+}

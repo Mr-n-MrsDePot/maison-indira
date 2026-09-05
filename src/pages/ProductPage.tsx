@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../CartContext.tsx";
 import { ProductCard } from "../components/ProductCard.tsx";
 import { formatMoney, getProduct, products } from "../data/products.ts";
 import { asset } from "../lib/asset.ts";
-import { stripeProductLinks } from "../lib/stripeLinks.ts";
+
 
 export function ProductPage() {
   const { slug = "" } = useParams();
   const product = getProduct(slug);
-  const { add } = useCart();
+  const { add, setOpen } = useCart();
+  const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [active, setActive] = useState(0);
   useEffect(() => {
@@ -80,14 +81,17 @@ export function ProductPage() {
             <button className="btn" type="button" onClick={() => add(product.slug, qty)}>
               Add to bag
             </button>
-            <a
+            <button
               className="btn ghost"
-              href={stripeProductLinks[product.slug]}
-              target="_blank"
-              rel="noreferrer"
+              type="button"
+              onClick={() => {
+                add(product.slug, qty);
+                setOpen(false);
+                navigate("/checkout");
+              }}
             >
               Buy now
-            </a>
+            </button>
           </div>
           <div className="panel">
             <p className="eyebrow">Includes</p>

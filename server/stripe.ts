@@ -5,7 +5,13 @@ import { stripeLines } from "../src/lib/checkout.ts";
 type StripeSession = {
   id?: string;
   url?: string;
+  client_secret?: string;
   error?: { message?: string };
+};
+
+export type EmbeddedCheckout = {
+  clientSecret: string;
+  publishableKey: string;
 };
 
 function append(body: URLSearchParams, key: string, value: string): void {
@@ -27,9 +33,10 @@ export function parseCartBody(raw: unknown): CartLine[] {
 
 export async function createCheckoutSession(options: {
   secret: string;
+  publishableKey: string;
   origin: string;
   lines: CartLine[];
-}): Promise<{ url: string } | { error: string; status: number }> {
+}): Promise<EmbeddedCheckout | { error: string; status: number }> {
   const items = stripeLines(options.lines);
   if (items.length === 0) {
     return { error: "Your bag is empty.", status: 400 };
@@ -40,17 +47,29 @@ export async function createCheckoutSession(options: {
       status: 503,
     };
   }
+  if (!options.publishableKey.startsWith("pk_live_")) {
+    return {
+      error: "Add STRIPE_PUBLISHABLE_KEY (pk_live_...) so pay stays on the site.",
+      status: 503,
+    };
+  }
 
   const origin = options.origin.replace(/\/$/, "");
+  const stamp = Math.random().toString(36).slice(2, 10);
   const body = new URLSearchParams();
   append(body, "mode", "payment");
-  append(body, "success_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
-  append(body, "cancel_url", `${origin}/#/cart`);
+  append(body, "ui_mode", "embedded");
+  append(body, "return_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
+  append(body, "integration_identifier", `maison-indira-${stamp}`);
   append(body, "billing_address_collection", "required");
   append(body, "customer_creation", "always");
   append(body, "phone_number_collection[enabled]", "true");
   append(body, "shipping_address_collection[allowed_countries][0]", "US");
   append(body, "allow_promotion_codes", "true");
+  append(body, "name_collection[individual][enabled]", "true");
+  append(body, "custom_text[submit][message]", "Pay Maison Indira");
+  append(body, "custom_text[shipping_address][message]", "Where should Cloud Nine arrive?");
+  append(body, "custom_text[after_submit][message]", "Not just fragrance. An experience.");
 
   items.forEach((item, index) => {
     append(body, `line_items[${index}][quantity]`, String(item.quantity));
@@ -87,13 +106,13 @@ export async function createCheckoutSession(options: {
     body,
   });
   const data = (await response.json()) as StripeSession;
-  if (!response.ok || !data.url) {
+  if (!response.ok || !data.client_secret) {
     return {
       error: data.error?.message ?? `Stripe checkout failed (${response.status})`,
       status: 502,
     };
   }
-  return { url: data.url };
+  return { clientSecret: data.client_secret, publishableKey: options.publishableKey };
 }
 
 export function requestOrigin(headers: Headers | Record<string, string | undefined>): string {

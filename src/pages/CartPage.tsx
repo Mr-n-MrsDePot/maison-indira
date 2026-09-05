@@ -53,8 +53,7 @@ export function CartPage() {
             <p className="eyebrow">Checkout</p>
             <h2 style={{ fontSize: "2rem" }}>{formatMoney(total)}</h2>
             <p>
-              Pay with card through Stripe — money goes to Maison Indira, not Shopify. Shipping is
-              chosen on the next screen.
+              Pay on this page. Money goes to Maison Indira. Shipping is chosen at pay.
             </p>
             {checkoutError ? <p className="checkout-error">{checkoutError}</p> : null}
             <button
@@ -63,7 +62,7 @@ export function CartPage() {
               disabled={checkoutBusy}
               onClick={() => void checkout()}
             >
-              {checkoutBusy ? "Opening Stripe…" : "Continue to checkout"}
+              {checkoutBusy ? "Opening checkout…" : "Continue to checkout"}
             </button>
             <Link className="btn ghost" to="/shop">
               Keep shopping

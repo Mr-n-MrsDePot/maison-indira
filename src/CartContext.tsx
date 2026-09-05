@@ -17,7 +17,7 @@ import {
   setLineQty,
   type CartLine,
 } from "./lib/cart.ts";
-import { stripeCheckoutUrl } from "./lib/stripeLinks.ts";
+
 
 type CartContextValue = {
   lines: CartLine[];
@@ -65,12 +65,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const checkout = useCallback(async () => {
-    setCheckoutBusy(true);
     setCheckoutError(null);
-    // Live Payment Links on Maison Indira only — never the unclaimed stripe-indira sandbox.
-    window.location.assign(stripeCheckoutUrl(lines));
-    setCheckoutBusy(false);
-  }, [lines]);
+    setOpen(false);
+    window.location.hash = "#/checkout";
+  }, []);
 
   const value = useMemo(
     () => ({

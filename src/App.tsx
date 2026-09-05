@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout.tsx";
 import { AboutPage } from "./pages/AboutPage.tsx";
 import { CartPage } from "./pages/CartPage.tsx";
+import { CheckoutPage } from "./pages/CheckoutPage.tsx";
 import { ContactPage } from "./pages/ContactPage.tsx";
 import { HomePage } from "./pages/HomePage.tsx";
 import { NotFoundPage } from "./pages/NotFoundPage.tsx";
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="cart" element={<CartPage />} />
+        <Route path="checkout" element={<CheckoutPage />} />
         <Route path="order-success" element={<OrderSuccessPage />} />
         <Route path="returns" element={<ReturnsPage />} />
         <Route path="collections/all" element={<Navigate to="/shop" replace />} />

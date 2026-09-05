@@ -39,6 +39,7 @@ export default async function handler(req, res) {
   }
 
   const secret = (process.env.STRIPE_SECRET_KEY || "").trim();
+  const publishableKey = (process.env.STRIPE_PUBLISHABLE_KEY || "").trim();
   const items = lineItems(req.body?.lines);
   if (items.length === 0) {
     res.status(400).json({ error: "Your bag is empty." });
@@ -50,17 +51,29 @@ export default async function handler(req, res) {
     });
     return;
   }
+  if (!publishableKey.startsWith("pk_live_")) {
+    res.status(503).json({
+      error: "Add STRIPE_PUBLISHABLE_KEY (pk_live_...) so pay stays on the site.",
+    });
+    return;
+  }
 
   const origin = originFrom(req);
+  const stamp = Math.random().toString(36).slice(2, 10);
   const body = new URLSearchParams();
   append(body, "mode", "payment");
-  append(body, "success_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
-  append(body, "cancel_url", `${origin}/#/cart`);
+  append(body, "ui_mode", "embedded");
+  append(body, "return_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
+  append(body, "integration_identifier", `maison-indira-${stamp}`);
   append(body, "billing_address_collection", "required");
   append(body, "customer_creation", "always");
   append(body, "phone_number_collection[enabled]", "true");
   append(body, "shipping_address_collection[allowed_countries][0]", "US");
   append(body, "allow_promotion_codes", "true");
+  append(body, "name_collection[individual][enabled]", "true");
+  append(body, "custom_text[submit][message]", "Pay Maison Indira");
+  append(body, "custom_text[shipping_address][message]", "Where should Cloud Nine arrive?");
+  append(body, "custom_text[after_submit][message]", "Not just fragrance. An experience.");
 
   items.forEach((item, index) => {
     append(body, `line_items[${index}][quantity]`, String(item.qty));
@@ -85,11 +98,11 @@ export default async function handler(req, res) {
     body,
   });
   const data = await stripeRes.json();
-  if (!stripeRes.ok || !data.url) {
+  if (!stripeRes.ok || !data.client_secret) {
     res.status(502).json({
       error: data.error?.message || `Stripe checkout failed (${stripeRes.status})`,
     });
     return;
   }
-  res.status(200).json({ url: data.url });
+  res.status(200).json({ clientSecret: data.client_secret, publishableKey });
 }

@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
-import { loadLocalEnv, stripeSecret } from "./env.ts";
+import { loadLocalEnv, stripePublishable, stripeSecret } from "./env.ts";
 import { createCheckoutSession, parseCartBody, requestOrigin } from "./stripe.ts";
 
 function send(res: ServerResponse, status: number, body: unknown): void {
@@ -54,13 +54,14 @@ export function checkoutPlugin(): Plugin {
                 : "http";
             const result = await createCheckoutSession({
               secret: stripeSecret(),
+              publishableKey: stripePublishable(),
               origin: requestOrigin({
                 host,
                 "x-forwarded-proto": proto,
               }),
               lines: parseCartBody(payload),
             });
-            if ("url" in result) send(res, 200, { url: result.url });
+            if ("clientSecret" in result) send(res, 200, result);
             else send(res, result.status, { error: result.error });
           } catch (err) {
             const message = err instanceof Error ? err.message : "Checkout failed";

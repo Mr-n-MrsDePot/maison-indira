@@ -24,7 +24,8 @@ Pay (no key on the site)
 - Mixed bag      https://buy.stripe.com/eVqcN5gUV2QgeEQ73RaVa02
 
 Website
-- Buy now and Checkout open those Stripe pages.
+- Checkout stays on the shop page (header/footer of Maison Indira). Pay is embedded.
+- If live keys are not on the host yet, it still uses her same Stripe account (buy.stripe.com) — same bank, not a new destination.
 - Shoppers never see Grok.
 
 Not yet
