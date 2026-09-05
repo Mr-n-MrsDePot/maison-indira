@@ -67,22 +67,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const checkout = useCallback(async () => {
     setCheckoutBusy(true);
     setCheckoutError(null);
-    const fallback = stripeCheckoutUrl(lines);
-    try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lines }),
-      });
-      const data = (await response.json()) as { url?: string; error?: string };
-      if (response.ok && data.url) {
-        window.location.assign(data.url);
-        return;
-      }
-    } catch {
-      /* static host has no /api/checkout — use Payment Links */
-    }
-    window.location.assign(fallback);
+    // Live Payment Links on Maison Indira only — never the unclaimed stripe-indira sandbox.
+    window.location.assign(stripeCheckoutUrl(lines));
     setCheckoutBusy(false);
   }, [lines]);
 
