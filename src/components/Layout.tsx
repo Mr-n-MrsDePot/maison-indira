@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useCart } from "../CartContext.tsx";
 import { brand } from "../data/products.ts";
 import { CartDrawer } from "./CartDrawer.tsx";
+import { GrokHelp } from "./GrokHelp.tsx";
 
 const links = [
   { to: "/", label: "Home" },
@@ -14,6 +15,22 @@ const links = [
 export function Layout() {
   const { count, setOpen } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const taps = useRef(0);
+  const tapTimer = useRef(0);
+
+  function onWordmarkClick() {
+    setMenuOpen(false);
+    window.clearTimeout(tapTimer.current);
+    taps.current += 1;
+    if (taps.current >= 3) {
+      taps.current = 0;
+      window.dispatchEvent(new Event("maison-house"));
+      return;
+    }
+    tapTimer.current = window.setTimeout(() => {
+      taps.current = 0;
+    }, 700);
+  }
 
   return (
     <>
@@ -30,7 +47,7 @@ export function Layout() {
             </NavLink>
           ))}
         </nav>
-        <NavLink className="wordmark" to="/" onClick={() => setMenuOpen(false)}>
+        <NavLink className="wordmark" to="/" onClick={onWordmarkClick}>
           {brand.name}
         </NavLink>
         <div className="header-actions">
@@ -109,6 +126,7 @@ export function Layout() {
         <div className="wrap legal">© {new Date().getFullYear()} Maison Indira. All rights reserved.</div>
       </footer>
       <CartDrawer />
+      <GrokHelp />
     </>
   );
 }

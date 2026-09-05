@@ -727,6 +727,67 @@ h3,
   display: none;
 }
 
+.grok-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 50;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  background: var(--paper);
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow);
+}
+
+.grok-fab:hover {
+  background: var(--gold);
+  color: var(--ivory);
+}
+
+.grok-sheet {
+  position: fixed;
+  right: 22px;
+  bottom: 108px;
+  z-index: 60;
+  width: min(360px, calc(100vw - 32px));
+  padding: 28px 24px 22px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 12px;
+}
+
+.grok-sheet h2 {
+  font-size: 2.1rem;
+}
+
+.grok-sheet p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.grok-code {
+  display: grid;
+  gap: 12px;
+}
+
+.grok-code input {
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  background: var(--ivory);
+  letter-spacing: 0.4em;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 @media (max-width: 960px) {
   .hero,
   .split,

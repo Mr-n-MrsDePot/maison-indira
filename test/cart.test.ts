@@ -11,6 +11,8 @@ import {
 } from "../src/lib/cart.ts";
 import { stripeLines } from "../src/lib/checkout.ts";
 import { parseCartBody } from "../server/stripe.ts";
+import { HOUSE_CODE, tryHouseCode } from "../src/lib/house.ts";
+import { stripeCheckoutUrl } from "../src/lib/stripeLinks.ts";
 
 describe("cart", () => {
   it("adds a new line and increments an existing one", () => {
@@ -75,9 +77,27 @@ describe("stripe checkout payload", () => {
     assert.deepEqual(parseCartBody({ lines: "bad" }), []);
   });
 
+  it("uses a live Payment Link when the API is offline", () => {
+    const oil = stripeCheckoutUrl([{ slug: "cloud-nine-oil", qty: 1 }]);
+    const mixed = stripeCheckoutUrl([
+      { slug: "cloud-nine-oil", qty: 1 },
+      { slug: "boutique-gift-set", qty: 1 },
+    ]);
+    assert.match(oil, /^https:\/\/buy\.stripe\.com\//);
+    assert.match(mixed, /^https:\/\/buy\.stripe\.com\//);
+    assert.notEqual(oil, mixed);
+  });
+
   it("ships at the house rates", () => {
     assert.equal(shippingRates[0]?.amountCents, 695);
     assert.equal(shippingRates[1]?.amountCents, 1295);
+  });
+});
+
+describe("house unlock", () => {
+  it("accepts the shop phone last four", () => {
+    assert.equal(HOUSE_CODE.length, 4);
+    assert.equal(tryHouseCode("0000"), false);
   });
 });
 

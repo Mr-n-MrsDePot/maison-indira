@@ -21,6 +21,9 @@ export const brand = {
   phone: "(732) 397-3299",
   phoneHref: "tel:+17323973299",
   email: "MaisonIndira9@gmail.com",
+  helpEmail: "MaisonIndira9@gmail.com",
+  helpCc: "tpott1980@gmail.com",
+  grokUrl: "https://grok.com",
   instagram: "MaisonIndira_",
   instagramUrl: "https://www.instagram.com/maisonindira_/",
 };

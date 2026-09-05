@@ -17,6 +17,7 @@ import {
   setLineQty,
   type CartLine,
 } from "./lib/cart.ts";
+import { stripeCheckoutUrl } from "./lib/stripeLinks.ts";
 
 type CartContextValue = {
   lines: CartLine[];
@@ -66,6 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const checkout = useCallback(async () => {
     setCheckoutBusy(true);
     setCheckoutError(null);
+    const fallback = stripeCheckoutUrl(lines);
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -73,16 +75,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ lines }),
       });
       const data = (await response.json()) as { url?: string; error?: string };
-      if (!response.ok || !data.url) {
-        throw new Error(data.error ?? "Checkout could not start.");
+      if (response.ok && data.url) {
+        window.location.assign(data.url);
+        return;
       }
-      window.location.assign(data.url);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Checkout could not start.";
-      setCheckoutError(message);
-    } finally {
-      setCheckoutBusy(false);
+    } catch {
+      /* static host has no /api/checkout — use Payment Links */
     }
+    window.location.assign(fallback);
+    setCheckoutBusy(false);
   }, [lines]);
 
   const value = useMemo(

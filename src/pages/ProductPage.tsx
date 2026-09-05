@@ -4,6 +4,7 @@ import { useCart } from "../CartContext.tsx";
 import { ProductCard } from "../components/ProductCard.tsx";
 import { formatMoney, getProduct, products } from "../data/products.ts";
 import { asset } from "../lib/asset.ts";
+import { stripeProductLinks } from "../lib/stripeLinks.ts";
 
 export function ProductPage() {
   const { slug = "" } = useParams();
@@ -79,6 +80,14 @@ export function ProductPage() {
             <button className="btn" type="button" onClick={() => add(product.slug, qty)}>
               Add to bag
             </button>
+            <a
+              className="btn ghost"
+              href={stripeProductLinks[product.slug]}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Buy now
+            </a>
           </div>
           <div className="panel">
             <p className="eyebrow">Includes</p>

@@ -1,12 +1,50 @@
-Maison Indira — send this
+Maison Indira — what is live (revised)
 
-Live preview (no login):
+Preview:
 https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html
 
-Suggested note:
+No Stripe secret key goes on the website.
 
-Hi — I made Maison Indira its own website, separate from Shopify. Same Cloud Nine products and photos. Checkout will go through Stripe so the money hits your bank, not Shopify.
+------------------------------------------------------------------------
+Done
+------------------------------------------------------------------------
 
-Have a look: https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html
+Stripe (live, Maison Indira)
+- Cards and payouts are on.
+- Checkout look matches the shop: ivory page, gold button, Lora, her logo.
+- Paid / failed checkouts now hit webhooks (not only subscriptions).
+- Paid checkouts can create a receipt/invoice.
 
-If you want changes (copy, photos, a custom domain like maisonindira.com), tell me.
+Pay (no key on the site)
+- Oil $15        https://buy.stripe.com/14A00jcEFduUcwI87VaVa00
+- Diffuser $40   https://buy.stripe.com/14A00jcEFbmMaoA3RFaVa04
+- Gift set $25   https://buy.stripe.com/dRm9AT7kl1Mc40c5ZNaVa03
+- Mixed bag      https://buy.stripe.com/eVqcN5gUV2QgeEQ73RaVa02
+
+Website
+- Buy now and Checkout open those Stripe pages.
+- Shoppers never see Grok.
+
+Not yet
+- No customer orders in Stripe yet (balance $0).
+- Custom USPS rates on the Stripe screen only if Vercel later gets STRIPE_SECRET_KEY. Not required.
+
+------------------------------------------------------------------------
+Grok button — you and Indira only
+------------------------------------------------------------------------
+
+Customers do not see it.
+
+Once per phone:
+1. Open the shop.
+2. Tap MAISON INDIRA at the top three times.
+3. Type 3299 (last four of the shop phone).
+4. Tap Keep Grok on this phone.
+
+The gold Grok circle stays on that phone.
+
+When she needs help: tap Grok → Call Grok.
+
+New phone or Safari data cleared: three taps + 3299 again.
+
+Do not post 3299 or the three-tap trick on Instagram.

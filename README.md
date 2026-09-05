@@ -11,7 +11,7 @@ cd D:\SystemHub\Projects\Active\maison-indira
 copy .env.example .env
 ```
 
-Put her Stripe secret key in `.env` as `STRIPE_SECRET_KEY=sk_test_...` (test key until she is ready for live cards).
+Checkout on the public site uses **Stripe Payment Links**. You do **not** put a secret key in the website for that. Optional: for local `/api/checkout` only, copy `.env.example` to `.env` and add `STRIPE_SECRET_KEY`.
 
 ```text
 npm install
@@ -31,12 +31,7 @@ Card fee is Stripe’s US rate: **2.9% + $0.30** per successful charge. No Shopi
 
 Example: a **$40** diffuser is about **$1.46** to Stripe. On Shopify Basic that same card fee still happens, plus **~$29/month**.
 
-She must:
-
-1. Create an account at [stripe.com](https://stripe.com) in the **Maison Indira** legal name.
-2. Add her bank for payouts.
-3. Copy the secret key from [Stripe API keys](https://dashboard.stripe.com/apikeys) into `.env` (local) and Vercel env (live).
-4. Use `sk_test_` until a test card works, then switch to `sk_live_`.
+Live catalog already checks out through Payment Links (oil $15, diffuser $40, gift $25). A secret key is only for the optional Vercel `/api/checkout` path.
 
 ## Go live
 
