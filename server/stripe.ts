@@ -34,9 +34,9 @@ export async function createCheckoutSession(options: {
   if (items.length === 0) {
     return { error: "Your bag is empty.", status: 400 };
   }
-  if (!options.secret) {
+  if (!options.secret.startsWith("sk_live_")) {
     return {
-      error: "Stripe is not connected yet. Add STRIPE_SECRET_KEY to .env.",
+      error: "Use a live Maison Indira key (sk_live_...). Sandbox checkout is off.",
       status: 503,
     };
   }

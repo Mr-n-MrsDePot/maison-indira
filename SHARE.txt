@@ -5,7 +5,7 @@ https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html
 
 No Stripe secret key goes on the website.
 
-If a pay page says "Unclaimed sandbox" or "Pay stripe-indira", that is FAKE test money. Close it. Real pay pages say Maison Indira and start with https://buy.stripe.com/
+If a pay page says "This sandbox is unclaimed. No real payments are processed" or "Pay stripe-indira", CLOSE IT. That is a test dummy. Real pay pages say Maison Indira and start with https://buy.stripe.com/
 
 ------------------------------------------------------------------------
 Done

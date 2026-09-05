@@ -44,9 +44,9 @@ export default async function handler(req, res) {
     res.status(400).json({ error: "Your bag is empty." });
     return;
   }
-  if (!secret) {
+  if (!secret.startsWith("sk_live_")) {
     res.status(503).json({
-      error: "Stripe is not connected yet. Add STRIPE_SECRET_KEY in Vercel.",
+      error: "Use a live Maison Indira key (sk_live_...). Sandbox checkout is off.",
     });
     return;
   }
