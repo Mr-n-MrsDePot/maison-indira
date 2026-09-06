@@ -1,5 +1,8 @@
 Maison Indira — what is live (revised)
 
+Shop (Vercel):
+https://maison-indira-psi.vercel.app
+
 Preview:
 https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html
 
@@ -7,17 +10,17 @@ Do NOT paste keys in chat or Instagram.
 
 If Stripe Dashboard (top right) says TEST MODE, turn that switch OFF. That is fake money. Use Live mode.
 
-Indira owns the Vercel project. She adds the keys there (not in chat).
+Ryan still has Vercel. Add the live keys there (not in chat). She can also invite him as Owner on her Vercel team: Settings → Members → invite his email → Owner.
 
 On-site checkout (bag quantities + USPS Ground $6.95 / Priority $12.95):
 
 1. Stripe Dashboard → turn TEST MODE off (Live mode).
 2. Developers → API keys.
-3. Vercel (her account) → maison-indira → Settings → Environment Variables:
+3. Vercel → maison-indira → Settings → Environment Variables:
    STRIPE_SECRET_KEY = sk_live_...   (Reveal secret key, then paste)
    STRIPE_PUBLISHABLE_KEY = pk_live_...
    Both: Production, Preview, and Development.
-4. Deployments → Redeploy the latest production deploy.
+4. Deployments → Redeploy.
 
 After that, checkout uses her real bag + shipping. Pay pages say Maison Indira, not TEST MODE.
 
