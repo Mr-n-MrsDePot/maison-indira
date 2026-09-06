@@ -14,6 +14,30 @@ export type HostedCheckout = {
   url: string;
 };
 
+const MAISON_INDIRA_ACCOUNT = "acct_1U8SYOHO12F39hHK";
+
+async function assertLiveMaisonIndira(secret: string): Promise<boolean> {
+  const res = await fetch("https://api.stripe.com/v1/account", {
+    headers: { Authorization: `Bearer ${secret}` },
+  });
+  const account = (await res.json()) as {
+    id?: string;
+    settings?: { dashboard?: { display_name?: string } };
+    business_profile?: { name?: string };
+  };
+  const name =
+    `${account.settings?.dashboard?.display_name ?? ""} ${account.business_profile?.name ?? ""}`.toLowerCase();
+  if (
+    !res.ok ||
+    account.id !== MAISON_INDIRA_ACCOUNT ||
+    name.includes("stripe-indira") ||
+    name.includes("sandbox")
+  ) {
+    return false;
+  }
+  return true;
+}
+
 function append(body: URLSearchParams, key: string, value: string): void {
   body.append(key, value);
 }
@@ -44,6 +68,13 @@ export async function createCheckoutSession(options: {
   if (!isLiveSecretKey(options.secret)) {
     return {
       error: "Use a live Maison Indira key (sk_live_ or rk_live_). Sandbox checkout is off.",
+      status: 503,
+    };
+  }
+  if (!(await assertLiveMaisonIndira(options.secret))) {
+    return {
+      error:
+        "That key is not live Maison Indira. Leave the stripe-indira sandbox and create a new key.",
       status: 503,
     };
   }
