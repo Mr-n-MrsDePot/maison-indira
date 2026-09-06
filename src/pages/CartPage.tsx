@@ -53,7 +53,7 @@ export function CartPage() {
             <p className="eyebrow">Checkout</p>
             <h2 style={{ fontSize: "2rem" }}>{formatMoney(total)}</h2>
             <p>
-              Pay on this page. Money goes to Maison Indira. Shipping is chosen at pay.
+              Pay with Stripe. Money goes to Maison Indira. Shipping is chosen at pay.
             </p>
             {checkoutError ? <p className="checkout-error">{checkoutError}</p> : null}
             <button

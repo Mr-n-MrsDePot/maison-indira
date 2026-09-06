@@ -3,9 +3,13 @@ Maison Indira — what is live (revised)
 Preview:
 https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html
 
-No Stripe secret key goes on the website.
+Do NOT paste an API key. The two keys in Stripe → Developers stay in Stripe. The shop does not need them.
+
+If Stripe Dashboard (top right) says TEST MODE, turn that switch OFF. That is fake money.
 
 If a pay page says "This sandbox is unclaimed. No real payments are processed" or "Pay stripe-indira", CLOSE IT. That is a test dummy. Real pay pages say Maison Indira and start with https://buy.stripe.com/
+
+If you were logged into Stripe, open pay in a private/incognito window so Test mode does not overlay.
 
 ------------------------------------------------------------------------
 Done
@@ -24,13 +28,12 @@ Pay (no key on the site)
 - Mixed bag      https://buy.stripe.com/eVqcN5gUV2QgeEQ73RaVa02
 
 Website
-- Checkout stays on the shop page (header/footer of Maison Indira). Pay is embedded.
-- If live keys are not on the host yet, it still uses her same Stripe account (buy.stripe.com) — same bank, not a new destination.
+- Checkout opens her live Stripe pay page (buy.stripe.com). Same bank. No key on the site.
 - Shoppers never see Grok.
 
 Not yet
 - No customer orders in Stripe yet (balance $0).
-- Custom USPS rates on the Stripe screen only if Vercel later gets STRIPE_SECRET_KEY. Not required.
+- Custom USPS rates on the Stripe screen only if a host later gets live keys. Not required to sell.
 
 ------------------------------------------------------------------------
 Grok button — you and Indira only

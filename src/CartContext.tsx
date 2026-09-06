@@ -17,6 +17,7 @@ import {
   setLineQty,
   type CartLine,
 } from "./lib/cart.ts";
+import { stripeCheckoutUrl } from "./lib/stripeLinks.ts";
 
 
 type CartContextValue = {
@@ -66,9 +67,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const checkout = useCallback(async () => {
     setCheckoutError(null);
+    const active = lines.filter((line) => line.qty > 0);
+    if (active.length === 0) {
+      setCheckoutError("Your bag is empty.");
+      return;
+    }
+    setCheckoutBusy(true);
     setOpen(false);
-    window.location.hash = "#/checkout";
-  }, []);
+    window.location.assign(stripeCheckoutUrl(lines));
+  }, [lines]);
 
   const value = useMemo(
     () => ({

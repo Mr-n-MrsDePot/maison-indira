@@ -11,7 +11,7 @@ cd D:\SystemHub\Projects\Active\maison-indira
 copy .env.example .env
 ```
 
-Checkout on the public site uses **Stripe Payment Links**. You do **not** put a secret key in the website for that. Optional: for local `/api/checkout` only, copy `.env.example` to `.env` and add `STRIPE_SECRET_KEY`.
+Checkout on the public site uses **Stripe Payment Links**. Do **not** paste an API key into the website. The keys in Stripe → Developers stay in Stripe.
 
 ```text
 npm install
@@ -37,8 +37,7 @@ Live catalog already checks out through Payment Links (oil $15, diffuser $40, gi
 
 1. Buy **maisonindira.com** (~$11/year at [Porkbun](https://porkbun.com/checkout/search?q=maisonindira.com)).
 2. Import this repo into [Vercel](https://vercel.com) (Vite, output `dist`).
-3. Add env vars: `STRIPE_SECRET_KEY`, `SITE_URL=https://maisonindira.com`.
-4. Point the domain at Vercel.
+3. Point the domain at Vercel. No Stripe key is required for Payment Links.
 
 Orders, receipts, and payouts are in the Stripe Dashboard. She still packs and ships.
 

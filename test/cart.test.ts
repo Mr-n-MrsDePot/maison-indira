@@ -12,7 +12,7 @@ import {
 import { stripeLines } from "../src/lib/checkout.ts";
 import { parseCartBody } from "../server/stripe.ts";
 import { HOUSE_CODE, tryHouseCode } from "../src/lib/house.ts";
-import { stripeCheckoutUrl } from "../src/lib/stripeLinks.ts";
+import { isLiveStripeCheckoutUrl, stripeCheckoutUrl } from "../src/lib/stripeLinks.ts";
 
 describe("cart", () => {
   it("adds a new line and increments an existing one", () => {
@@ -83,8 +83,8 @@ describe("stripe checkout payload", () => {
       { slug: "cloud-nine-oil", qty: 1 },
       { slug: "boutique-gift-set", qty: 1 },
     ]);
-    assert.match(oil, /^https:\/\/buy\.stripe\.com\//);
-    assert.match(mixed, /^https:\/\/buy\.stripe\.com\//);
+    assert.equal(isLiveStripeCheckoutUrl(oil), true);
+    assert.equal(isLiveStripeCheckoutUrl(mixed), true);
     assert.notEqual(oil, mixed);
   });
 

@@ -1,6 +1,6 @@
 import type { CartLine } from "./cart.ts";
 
-/** Live Stripe Payment Links — themed Checkout, no secret key required. */
+/** Live Stripe Payment Links — themed Checkout, no API key on the website. */
 export const stripeProductLinks: Record<string, string> = {
   "cloud-nine-oil": "https://buy.stripe.com/14A00jcEFduUcwI87VaVa00",
   "cloud-nine-diffuser": "https://buy.stripe.com/14A00jcEFbmMaoA3RFaVa04",
@@ -8,6 +8,10 @@ export const stripeProductLinks: Record<string, string> = {
 };
 
 export const stripeShopLink = "https://buy.stripe.com/eVqcN5gUV2QgeEQ73RaVa02";
+
+export function isLiveStripeCheckoutUrl(url: string): boolean {
+  return url.startsWith("https://buy.stripe.com/") && !url.includes("/test_");
+}
 
 export function stripeCheckoutUrl(lines: CartLine[]): string {
   const active = lines.filter((line) => line.qty > 0);
