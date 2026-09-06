@@ -36,8 +36,9 @@ Live catalog already checks out through Payment Links (oil $15, diffuser $40, gi
 ## Go live
 
 1. Buy **maisonindira.com** (~$11/year at [Porkbun](https://porkbun.com/checkout/search?q=maisonindira.com)).
-2. Import this repo into [Vercel](https://vercel.com) (Vite, output `dist`).
-3. Point the domain at Vercel. No Stripe key is required for Payment Links.
+2. This repo is the Vercel project **maison-indira**.
+3. In Vercel → Settings → Environment Variables, add live `STRIPE_PUBLISHABLE_KEY` (`pk_live_`) and `STRIPE_SECRET_KEY` (`sk_live_`). Stripe Dashboard must be in Live mode (TEST MODE off). Never commit keys.
+4. Point the domain at Vercel.
 
 Orders, receipts, and payouts are in the Stripe Dashboard. She still packs and ships.
 

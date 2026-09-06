@@ -39,7 +39,6 @@ export default async function handler(req, res) {
   }
 
   const secret = (process.env.STRIPE_SECRET_KEY || "").trim();
-  const publishableKey = (process.env.STRIPE_PUBLISHABLE_KEY || "").trim();
   const items = lineItems(req.body?.lines);
   if (items.length === 0) {
     res.status(400).json({ error: "Your bag is empty." });
@@ -51,19 +50,13 @@ export default async function handler(req, res) {
     });
     return;
   }
-  if (!publishableKey.startsWith("pk_live_")) {
-    res.status(503).json({
-      error: "Add STRIPE_PUBLISHABLE_KEY (pk_live_...) so pay stays on the site.",
-    });
-    return;
-  }
 
   const origin = originFrom(req);
   const stamp = Math.random().toString(36).slice(2, 10);
   const body = new URLSearchParams();
   append(body, "mode", "payment");
-  append(body, "ui_mode", "embedded");
-  append(body, "return_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
+  append(body, "success_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
+  append(body, "cancel_url", `${origin}/#/cart`);
   append(body, "integration_identifier", `maison-indira-${stamp}`);
   append(body, "billing_address_collection", "required");
   append(body, "customer_creation", "always");
@@ -98,11 +91,12 @@ export default async function handler(req, res) {
     body,
   });
   const data = await stripeRes.json();
-  if (!stripeRes.ok || !data.client_secret) {
+  const url = typeof data.url === "string" ? data.url : "";
+  if (!stripeRes.ok || data.livemode === false || !url.includes("cs_live_")) {
     res.status(502).json({
       error: data.error?.message || `Stripe checkout failed (${stripeRes.status})`,
     });
     return;
   }
-  res.status(200).json({ clientSecret: data.client_secret, publishableKey });
+  res.status(200).json({ url });
 }

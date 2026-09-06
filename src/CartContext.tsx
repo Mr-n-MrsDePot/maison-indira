@@ -17,7 +17,7 @@ import {
   setLineQty,
   type CartLine,
 } from "./lib/cart.ts";
-import { stripeCheckoutUrl } from "./lib/stripeLinks.ts";
+
 
 
 type CartContextValue = {
@@ -74,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     setCheckoutBusy(true);
     setOpen(false);
-    window.location.assign(stripeCheckoutUrl(lines));
+    window.location.hash = "#/checkout";
   }, [lines]);
 
   const value = useMemo(

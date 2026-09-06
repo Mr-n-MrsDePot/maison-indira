@@ -18,3 +18,4 @@ pages-source.json
 *.sw?
 
 .vercel
+.env*

@@ -16,7 +16,12 @@ export function isLiveStripeCheckoutUrl(url: string): boolean {
 export function stripeCheckoutUrl(lines: CartLine[]): string {
   const active = lines.filter((line) => line.qty > 0);
   if (active.length === 1) {
-    return stripeProductLinks[active[0].slug] ?? stripeShopLink;
+    const base = stripeProductLinks[active[0].slug] ?? stripeShopLink;
+    const qty = active[0].qty;
+    if (qty > 1 && stripeProductLinks[active[0].slug]) {
+      return `${base}?quantity=${qty}`;
+    }
+    return base;
   }
   return stripeShopLink;
 }

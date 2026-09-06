@@ -3,9 +3,25 @@ Maison Indira — what is live (revised)
 Preview:
 https://raw.githack.com/Mr-n-MrsDePot/maison-indira/main/docs/index.html
 
-Do NOT paste an API key. The two keys in Stripe → Developers stay in Stripe. The shop does not need them.
+Do NOT paste keys in chat or Instagram.
 
-If Stripe Dashboard (top right) says TEST MODE, turn that switch OFF. That is fake money.
+If Stripe Dashboard (top right) says TEST MODE, turn that switch OFF. That is fake money. Use Live mode.
+
+Indira owns the Vercel project. She adds the keys there (not in chat).
+
+On-site checkout (bag quantities + USPS Ground $6.95 / Priority $12.95):
+
+1. Stripe Dashboard → turn TEST MODE off (Live mode).
+2. Developers → API keys.
+3. Vercel (her account) → maison-indira → Settings → Environment Variables:
+   STRIPE_SECRET_KEY = sk_live_...   (Reveal secret key, then paste)
+   STRIPE_PUBLISHABLE_KEY = pk_live_...
+   Both: Production, Preview, and Development.
+4. Deployments → Redeploy the latest production deploy.
+
+After that, checkout uses her real bag + shipping. Pay pages say Maison Indira, not TEST MODE.
+
+Until those two Vercel fields are set, Checkout still opens her live buy.stripe.com pages (same bank). Do not use any page that says sandbox, stripe-indira, or TEST MODE.
 
 If a pay page says "This sandbox is unclaimed. No real payments are processed" or "Pay stripe-indira", CLOSE IT. That is a test dummy. Real pay pages say Maison Indira and start with https://buy.stripe.com/
 
@@ -28,7 +44,9 @@ Pay (no key on the site)
 - Mixed bag      https://buy.stripe.com/eVqcN5gUV2QgeEQ73RaVa02
 
 Website
-- Checkout opens her live Stripe pay page (buy.stripe.com). Same bank. No key on the site.
+- Checkout uses her live Stripe account (same bank).
+- With Vercel live keys: pay stays on the shop, bag quantities and USPS rates are exact.
+- Without those keys yet: live buy.stripe.com pages (still Maison Indira, not a new destination).
 - Shoppers never see Grok.
 
 Not yet

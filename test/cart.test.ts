@@ -86,6 +86,8 @@ describe("stripe checkout payload", () => {
     assert.equal(isLiveStripeCheckoutUrl(oil), true);
     assert.equal(isLiveStripeCheckoutUrl(mixed), true);
     assert.notEqual(oil, mixed);
+    const twoOils = stripeCheckoutUrl([{ slug: "cloud-nine-oil", qty: 2 }]);
+    assert.match(twoOils, /quantity=2/);
   });
 
   it("ships at the house rates", () => {

@@ -5,13 +5,12 @@ import { stripeLines } from "../src/lib/checkout.ts";
 type StripeSession = {
   id?: string;
   url?: string;
-  client_secret?: string;
+  livemode?: boolean;
   error?: { message?: string };
 };
 
-export type EmbeddedCheckout = {
-  clientSecret: string;
-  publishableKey: string;
+export type HostedCheckout = {
+  url: string;
 };
 
 function append(body: URLSearchParams, key: string, value: string): void {
@@ -36,7 +35,7 @@ export async function createCheckoutSession(options: {
   publishableKey: string;
   origin: string;
   lines: CartLine[];
-}): Promise<EmbeddedCheckout | { error: string; status: number }> {
+}): Promise<HostedCheckout | { error: string; status: number }> {
   const items = stripeLines(options.lines);
   if (items.length === 0) {
     return { error: "Your bag is empty.", status: 400 };
@@ -47,19 +46,13 @@ export async function createCheckoutSession(options: {
       status: 503,
     };
   }
-  if (!options.publishableKey.startsWith("pk_live_")) {
-    return {
-      error: "Add STRIPE_PUBLISHABLE_KEY (pk_live_...) so pay stays on the site.",
-      status: 503,
-    };
-  }
 
   const origin = options.origin.replace(/\/$/, "");
   const stamp = Math.random().toString(36).slice(2, 10);
   const body = new URLSearchParams();
   append(body, "mode", "payment");
-  append(body, "ui_mode", "embedded");
-  append(body, "return_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
+  append(body, "success_url", `${origin}/#/order-success?session_id={CHECKOUT_SESSION_ID}`);
+  append(body, "cancel_url", `${origin}/#/cart`);
   append(body, "integration_identifier", `maison-indira-${stamp}`);
   append(body, "billing_address_collection", "required");
   append(body, "customer_creation", "always");
@@ -106,13 +99,14 @@ export async function createCheckoutSession(options: {
     body,
   });
   const data = (await response.json()) as StripeSession;
-  if (!response.ok || !data.client_secret) {
+  const url = data.url ?? "";
+  if (!response.ok || data.livemode === false || !url.includes("cs_live_")) {
     return {
       error: data.error?.message ?? `Stripe checkout failed (${response.status})`,
       status: 502,
     };
   }
-  return { clientSecret: data.client_secret, publishableKey: options.publishableKey };
+  return { url };
 }
 
 export function requestOrigin(headers: Headers | Record<string, string | undefined>): string {

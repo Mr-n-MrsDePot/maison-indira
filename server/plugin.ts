@@ -61,7 +61,7 @@ export function checkoutPlugin(): Plugin {
               }),
               lines: parseCartBody(payload),
             });
-            if ("clientSecret" in result) send(res, 200, result);
+            if ("url" in result) send(res, 200, result);
             else send(res, result.status, { error: result.error });
           } catch (err) {
             const message = err instanceof Error ? err.message : "Checkout failed";
