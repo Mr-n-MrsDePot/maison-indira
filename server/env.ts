@@ -31,7 +31,11 @@ export function isLiveSecretKey(secret: string): boolean {
 }
 
 export function stripeSecret(): string {
-  return process.env.STRIPE_SECRET_KEY?.trim() ?? "";
+  return (
+    process.env.STRIPE_SECRET_KEY?.trim() ||
+    process.env.stripe_secret_key?.trim() ||
+    ""
+  );
 }
 
 export function stripePublishable(): string {

@@ -38,7 +38,11 @@ export default async function handler(req, res) {
     return;
   }
 
-  const secret = (process.env.STRIPE_SECRET_KEY || "").trim();
+  const secret = (
+    process.env.STRIPE_SECRET_KEY ||
+    process.env.stripe_secret_key ||
+    ""
+  ).trim();
   const items = lineItems(req.body?.lines);
   if (items.length === 0) {
     res.status(400).json({ error: "Your bag is empty." });
