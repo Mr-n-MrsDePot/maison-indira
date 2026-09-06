@@ -1,6 +1,7 @@
 import { shippingRates } from "../src/data/shipping.ts";
 import { type CartLine } from "../src/lib/cart.ts";
 import { stripeLines } from "../src/lib/checkout.ts";
+import { isLiveSecretKey } from "./env.ts";
 
 type StripeSession = {
   id?: string;
@@ -40,9 +41,9 @@ export async function createCheckoutSession(options: {
   if (items.length === 0) {
     return { error: "Your bag is empty.", status: 400 };
   }
-  if (!options.secret.startsWith("sk_live_")) {
+  if (!isLiveSecretKey(options.secret)) {
     return {
-      error: "Use a live Maison Indira key (sk_live_...). Sandbox checkout is off.",
+      error: "Use a live Maison Indira key (sk_live_ or rk_live_). Sandbox checkout is off.",
       status: 503,
     };
   }

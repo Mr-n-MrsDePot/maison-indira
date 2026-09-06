@@ -17,9 +17,9 @@ On-site checkout (bag quantities + USPS Ground $6.95 / Priority $12.95):
 1. Stripe Dashboard → turn TEST MODE off (Live mode).
 2. Developers → API keys.
 3. Vercel → maison-indira → Settings → Environment Variables:
-   STRIPE_SECRET_KEY = sk_live_...   (Reveal secret key, then paste)
-   STRIPE_PUBLISHABLE_KEY = pk_live_...
-   Both: Production, Preview, and Development.
+   STRIPE_SECRET_KEY = rk_live_... (restricted, best) or sk_live_... (standard)
+   Optional: STRIPE_PUBLISHABLE_KEY = pk_live_...
+   Production, Preview, and Development.
 4. Deployments → Redeploy.
 
 After that, checkout uses her real bag + shipping. Pay pages say Maison Indira, not TEST MODE.

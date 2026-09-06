@@ -12,6 +12,7 @@ import {
 import { stripeLines } from "../src/lib/checkout.ts";
 import { parseCartBody } from "../server/stripe.ts";
 import { HOUSE_CODE, tryHouseCode } from "../src/lib/house.ts";
+import { isLiveSecretKey } from "../server/env.ts";
 import { isLiveStripeCheckoutUrl, stripeCheckoutUrl } from "../src/lib/stripeLinks.ts";
 
 describe("cart", () => {
@@ -93,6 +94,16 @@ describe("stripe checkout payload", () => {
   it("ships at the house rates", () => {
     assert.equal(shippingRates[0]?.amountCents, 695);
     assert.equal(shippingRates[1]?.amountCents, 1295);
+  });
+});
+
+describe("stripe keys", () => {
+  it("accepts live secret and restricted keys only", () => {
+    assert.equal(isLiveSecretKey("sk_live_example"), true);
+    assert.equal(isLiveSecretKey("rk_live_example"), true);
+    assert.equal(isLiveSecretKey("sk_test_example"), false);
+    assert.equal(isLiveSecretKey("rk_test_example"), false);
+    assert.equal(isLiveSecretKey("pk_live_example"), false);
   });
 });
 

@@ -25,6 +25,11 @@ export function loadLocalEnv(): void {
   }
 }
 
+/** Live secret or restricted key. Test keys (sk_test_ / rk_test_) are rejected. */
+export function isLiveSecretKey(secret: string): boolean {
+  return secret.startsWith("sk_live_") || secret.startsWith("rk_live_");
+}
+
 export function stripeSecret(): string {
   return process.env.STRIPE_SECRET_KEY?.trim() ?? "";
 }

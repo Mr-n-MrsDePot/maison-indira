@@ -44,9 +44,9 @@ export default async function handler(req, res) {
     res.status(400).json({ error: "Your bag is empty." });
     return;
   }
-  if (!secret.startsWith("sk_live_")) {
+  if (!secret.startsWith("sk_live_") && !secret.startsWith("rk_live_")) {
     res.status(503).json({
-      error: "Use a live Maison Indira key (sk_live_...). Sandbox checkout is off.",
+      error: "Use a live Maison Indira key (sk_live_ or rk_live_). Sandbox checkout is off.",
     });
     return;
   }
