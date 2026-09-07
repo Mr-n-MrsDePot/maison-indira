@@ -17,6 +17,7 @@ import {
   setLineQty,
   type CartLine,
 } from "./lib/cart.ts";
+import { stripeCheckoutUrl } from "./lib/stripeLinks.ts";
 
 
 
@@ -74,7 +75,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     setCheckoutBusy(true);
     setOpen(false);
-    window.location.hash = "#/checkout";
+    window.location.assign(stripeCheckoutUrl(lines));
   }, [lines]);
 
   const value = useMemo(
