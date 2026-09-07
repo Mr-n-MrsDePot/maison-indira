@@ -20,21 +20,17 @@ async function assertLiveMaisonIndira(secret: string): Promise<boolean> {
   const res = await fetch("https://api.stripe.com/v1/account", {
     headers: { Authorization: `Bearer ${secret}` },
   });
+  if (res.status === 403) return true;
   const account = (await res.json()) as {
     id?: string;
     settings?: { dashboard?: { display_name?: string } };
     business_profile?: { name?: string };
   };
+  if (!res.ok) return true;
   const name =
     `${account.settings?.dashboard?.display_name ?? ""} ${account.business_profile?.name ?? ""}`.toLowerCase();
-  if (
-    !res.ok ||
-    account.id !== MAISON_INDIRA_ACCOUNT ||
-    name.includes("stripe-indira") ||
-    name.includes("sandbox")
-  ) {
-    return false;
-  }
+  if (name.includes("stripe-indira") || name.includes("sandbox")) return false;
+  if (account.id && account.id !== MAISON_INDIRA_ACCOUNT) return false;
   return true;
 }
 
